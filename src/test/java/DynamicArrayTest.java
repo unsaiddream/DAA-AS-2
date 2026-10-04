@@ -83,4 +83,23 @@ class DynamicArrayTest {
         assertThrows(IndexOutOfBoundsException.class, () -> array.add(2, 5));
         assertThrows(IndexOutOfBoundsException.class, () -> array.remove(1));
     }
+    @Test
+    void countsPhysicalOperations() {
+        DynamicArray array = new DynamicArray();
+        for (int i = 0; i < 4; i++) {
+            array.add(i);
+        }
+
+        array.metrics().reset();
+        array.add(4);
+        assertEquals(4, array.metrics().getSteps());
+        assertEquals(4, array.metrics().getMoves());
+        assertEquals(0, array.metrics().getComparisons());
+
+        array.metrics().reset();
+        assertFalse(array.contains(9));
+        assertEquals(5, array.metrics().getSteps());
+        assertEquals(0, array.metrics().getMoves());
+        assertEquals(5, array.metrics().getComparisons());
+    }
 }

@@ -80,4 +80,21 @@ class MinHeapTest {
                     "Heap property broken at child index " + child);
         }
     }
+    @Test
+    void countsReadsMovesAndComparisons() {
+        MinHeap heap = new MinHeap();
+        heap.insert(3);
+
+        heap.metrics().reset();
+        heap.insert(1);
+        assertEquals(4, heap.metrics().getSteps());
+        assertEquals(2, heap.metrics().getMoves());
+        assertEquals(1, heap.metrics().getComparisons());
+
+        heap.metrics().reset();
+        assertEquals(1, heap.extractMin());
+        assertEquals(2, heap.metrics().getSteps());
+        assertEquals(1, heap.metrics().getMoves());
+        assertEquals(0, heap.metrics().getComparisons());
+    }
 }

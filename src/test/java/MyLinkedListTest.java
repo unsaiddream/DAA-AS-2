@@ -96,4 +96,26 @@ class MyLinkedListTest {
             }
         }
     }
+    @Test
+    void countsTraversalsAndLinkUpdates() {
+        MyLinkedList list = new MyLinkedList();
+        list.add(10);
+        list.add(20);
+        list.add(30);
+
+        list.metrics().reset();
+        assertEquals(30, list.get(2));
+        assertEquals(2, list.metrics().getSteps());
+
+        list.metrics().reset();
+        list.add(0, 5);
+        assertEquals(0, list.metrics().getSteps());
+        assertEquals(2, list.metrics().getMoves());
+
+        list.metrics().reset();
+        assertFalse(list.contains(99));
+        assertEquals(3, list.metrics().getSteps());
+        assertEquals(4, list.metrics().getComparisons());
+    }
 }
+
