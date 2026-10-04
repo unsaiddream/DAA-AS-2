@@ -1,4 +1,4 @@
-public class DynamicArray {
+public class DynamicArray implements IntSequence {
     private int[] elements;
     private int size;
     private final OperationMetrics metrics = new OperationMetrics();
