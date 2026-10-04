@@ -1,4 +1,4 @@
-public class MyLinkedList {
+public class MyLinkedList implements IntSequence {
     private static class Node {
         int value;
         Node next;
