@@ -1,10 +1,10 @@
 public class DynamicArray {
     private int[] elements;
     private int size;
+    private final OperationMetrics metrics = new OperationMetrics();
 
     public DynamicArray() {
         elements = new int[4];
-        size = 0;
     }
 
     public void add(int value) {
@@ -19,6 +19,8 @@ public class DynamicArray {
 
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
+            metrics.addStep();
+            metrics.addMove();
         }
 
         elements[index] = value;
@@ -27,10 +29,14 @@ public class DynamicArray {
 
     public int remove(int index) {
         checkElementIndex(index);
+
         int removed = elements[index];
+        metrics.addStep();
 
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
+            metrics.addStep();
+            metrics.addMove();
         }
 
         size--;
@@ -39,12 +45,17 @@ public class DynamicArray {
 
     public int get(int index) {
         checkElementIndex(index);
+        metrics.addStep();
         return elements[index];
     }
 
     public boolean contains(int value) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == value) {
+            int current = elements[i];
+            metrics.addStep();
+            metrics.addComparison();
+
+            if (current == value) {
                 return true;
             }
         }
@@ -55,15 +66,23 @@ public class DynamicArray {
         return size;
     }
 
+    public OperationMetrics metrics() {
+        return metrics;
+    }
+
     private void ensureCapacity() {
         if (size < elements.length) {
             return;
         }
 
         int[] larger = new int[elements.length * 2];
+
         for (int i = 0; i < size; i++) {
             larger[i] = elements[i];
+            metrics.addStep();
+            metrics.addMove();
         }
+
         elements = larger;
     }
 

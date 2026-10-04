@@ -11,17 +11,21 @@ public class MyLinkedList {
     private Node head;
     private Node tail;
     private int size;
+    private final OperationMetrics metrics = new OperationMetrics();
 
     public void add(int value) {
         Node node = new Node(value);
 
         if (size == 0) {
             head = node;
+            metrics.addMove();
         } else {
             tail.next = node;
+            metrics.addMove();
         }
 
         tail = node;
+        metrics.addMove();
         size++;
     }
 
@@ -37,11 +41,15 @@ public class MyLinkedList {
 
         if (index == 0) {
             node.next = head;
+            metrics.addMove();
             head = node;
+            metrics.addMove();
         } else {
             Node previous = nodeAt(index - 1);
             node.next = previous.next;
+            metrics.addMove();
             previous.next = node;
+            metrics.addMove();
         }
 
         size++;
@@ -50,26 +58,30 @@ public class MyLinkedList {
     public int remove(int index) {
         checkElementIndex(index);
 
-        int removed;
-
         if (index == 0) {
-            removed = head.value;
+            int removed = head.value;
             head = head.next;
+            metrics.addMove();
             size--;
 
             if (size == 0) {
                 tail = null;
+                metrics.addMove();
             }
             return removed;
         }
 
         Node previous = nodeAt(index - 1);
         Node current = previous.next;
-        removed = current.value;
+        metrics.addStep();
+
+        int removed = current.value;
         previous.next = current.next;
+        metrics.addMove();
 
         if (current == tail) {
             tail = previous;
+            metrics.addMove();
         }
 
         size--;
@@ -85,8 +97,13 @@ public class MyLinkedList {
         Node current = head;
 
         while (current != null) {
+            metrics.addComparison();
             if (current.value == value) {
                 return true;
+            }
+
+            if (current.next != null) {
+                metrics.addStep();
             }
             current = current.next;
         }
@@ -98,11 +115,16 @@ public class MyLinkedList {
         return size;
     }
 
+    public OperationMetrics metrics() {
+        return metrics;
+    }
+
     private Node nodeAt(int index) {
         Node current = head;
 
         for (int i = 0; i < index; i++) {
             current = current.next;
+            metrics.addStep();
         }
 
         return current;
